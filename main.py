@@ -1,10 +1,10 @@
 import os
 from datetime import datetime
 from pytz import timezone
-
 from crawling_web import extract_article_data_nongsaro
 from crawling_web import parsing_beautifulsoup, extract_article_data
 from github_utils import get_github_repo, upload_github_issue
+from sms_sender import send_sms
 
 if __name__ == "__main__":
     access_token = os.environ['MY_GITHUB_TOKEN']
@@ -44,3 +44,7 @@ if __name__ == "__main__":
     # repo = get_github_repo(repository_name)
     upload_github_issue(repo, issue_title, upload_contents)
     print("Upload Github Issue Success!")
+
+    # SMS로 전송
+    sms_body = f"보도자료 알림({today_date})\n" + "\n".join([f"{article['title']} ({article['date']}): {article['url']}" for article in all_articles])
+    send_sms(sms_body)
