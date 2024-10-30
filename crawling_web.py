@@ -17,7 +17,8 @@ def extract_article_data(soup):
     base_url = 'https://rda.go.kr/board/board.do?'
     today_date = datetime.now().strftime('%Y-%m-%d')
 
-    for row in soup.select('table.g_list.boDo tr td div.news_txt')[:10]:  # 최신 5개만
+    items = soup.select('table.g_list.boDo tr td div.news_txt')
+    for row in items:
         title = row.select_one('div.title a').get_text(strip=True)
         date = row.select_one('span.date').get_text(strip=True)
         if date == today_date:
@@ -40,14 +41,14 @@ def extract_article_data_nongsaro(soup):
     articles = []
     today_date = datetime.now().strftime('%Y-%m-%d')
 
-    # # 가장 최근 뉴스 항목 선택
-    # news_item = soup.select_one('.photo_list li a')
+    news_items = soup.select('.photo_list li a')
 
-    for news_item in soup.select('.photo_list li a')[:10]:
+    for news_item in news_items:
         # 제목, 내용, 날짜 가져오기
         title = news_item.select_one('.contBox strong').get_text(strip=True)
         content = news_item.select_one('.contBox p.txt').get_text(strip=True)[:50] + "..."
         date = news_item.select_one('.contBox em.date').get_text(strip=True)
+
         if date == today_date:
             # onclick 속성에서 숫자 추출
             onclick_attr = news_item['onclick']
