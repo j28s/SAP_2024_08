@@ -41,7 +41,7 @@ def extract_article_data_nongsaro(soup):
     articles = []
     today_date = datetime.now().strftime('%Y-%m-%d')
 
-    news_items = soup.select('.photo_list li')
+    news_items = soup.select('.photo_list li a')
 
     for news_item in news_items:
         # 제목, 내용, 날짜 가져오기
