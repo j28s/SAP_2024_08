@@ -1,15 +1,24 @@
 import os
 from datetime import datetime
 from pytz import timezone
-from crawling_web import extract_article_data_nongsaro, extract_article_data_me
-from crawling_web import parsing_beautifulsoup, extract_article_data
+from app import extract_article_data_nongsaro, extract_article_data_me
+from app import parsing_beautifulsoup, extract_article_data
 from github_utils import get_github_repo, upload_github_issue
 from sms_sender import send_sms
+import subprocess
+
+
+def run_streamlit_app():
+    """스트림릿 애플리케이션을 실행합니다."""
+    subprocess.Popen(["streamlit", "run", "app.py"])
+
 
 if __name__ == "__main__":
     access_token = os.environ['MY_GITHUB_TOKEN']
     if not access_token:
         print("Error: GIT_ACTION_KEY is not set.")
+        exit()
+
     repository_name = "SAP_2024_08"
 
     seoul_timezone = timezone('Asia/Seoul')
@@ -18,7 +27,6 @@ if __name__ == "__main__":
 
     # 농촌진흥청 보도자료 크롤링
     rda_news_url = "https://rda.go.kr/board/board.do?mode=list&prgId=day_farmprmninfoEntry"
-    # BeautifulSoup으로 페이지 파싱 및 데이터 추출
     rda_soup = parsing_beautifulsoup(rda_news_url)
     rda_articles = extract_article_data(rda_soup)
 
@@ -35,18 +43,20 @@ if __name__ == "__main__":
     # 모든 기사들을 합치기
     all_articles = rda_articles + nongsaro_articles + me_articles
 
-
     issue_title = f"{today_date} 보도자료"
     upload_contents = "\n\n".join(
-        [f"### {article['title']} ({article['date']})\n- URL: {article['url']}\n- 내용: {article['content']}" for article in all_articles]
+        [f"### {article['title']} ({article['date']})\n- URL: {article['url']}\n- 내용: {article['content']}" for article
+         in all_articles]
     )
 
     # GitHub에 Issue 업로드
     repo = get_github_repo(access_token, repository_name)
-    # repo = get_github_repo(repository_name)
     upload_github_issue(repo, issue_title, upload_contents)
     print("Upload Github Issue Success!")
 
-    # SMS로 전송
+    # SMS로 전송 (주석 처리)
     # sms_body = f"보도자료 알림({today_date})\n" + "\n".join([f"{article['title']}" for article in all_articles])
     # send_sms(sms_body)
+
+    # 스트림릿 앱 실행
+    run_streamlit_app()
