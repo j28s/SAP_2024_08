@@ -9,8 +9,7 @@ def get_github_repo(access_token, repository_name):
     :return: repo object
     """
     g = Github(access_token)
-    if not access_token:
-        print("Error: MY_GITHUB_TOKEN is not set.")
+
     # g = Github()
     return g.get_user().get_repo(repository_name)
 
