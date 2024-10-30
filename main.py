@@ -1,7 +1,9 @@
 import os
 from datetime import datetime
 from pytz import timezone
-from crawling_rda import parsing_beautifulsoup, extract_article_data
+
+from crawling_web import extract_article_data_nongsaro
+from crawling_web import parsing_beautifulsoup, extract_article_data
 from github_utils import get_github_repo, upload_github_issue
 
 if __name__ == "__main__":
@@ -16,15 +18,25 @@ if __name__ == "__main__":
     today = datetime.now(seoul_timezone)
     today_date = today.strftime("%Y년 %m월 %d일")
 
+    # 농촌진흥청 보도자료 크롤링
     rda_news_url = "https://rda.go.kr/board/board.do?mode=list&prgId=day_farmprmninfoEntry"
-
     # BeautifulSoup으로 페이지 파싱 및 데이터 추출
-    soup = parsing_beautifulsoup(rda_news_url)
-    articles = extract_article_data(soup)
+    rda_soup = parsing_beautifulsoup(rda_news_url)
+    rda_articles = extract_article_data(rda_soup)
 
-    issue_title = f"농촌진흥청 보도자료 알림({today_date})"
+
+    nongsaro_url = "https://www.nongsaro.go.kr/portal/ps/psa/psac/farmLocalNewsLst.ps?pageIndex=1&pageSize=1&menuId=PS03939&keyval=&sType=&sSrchType=sSj&sText="
+    nongsaro_soup = parsing_beautifulsoup(nongsaro_url)
+
+    # 농사로 공지사항 크롤링
+    nongsaro_articles = extract_article_data_nongsaro(nongsaro_soup)
+
+    all_articles = rda_articles + nongsaro_articles
+
+
+    issue_title = f"보도자료 알림({today_date})"
     upload_contents = "\n\n".join(
-        [f"### {article['title']} ({article['date']})\n- URL: {article['url']}\n- 내용: {article['content']}" for article in articles]
+        [f"### {article['title']} ({article['date']})\n- URL: {article['url']}\n- 내용: {article['content']}" for article in all_articles]
     )
 
     # GitHub 업로드 대신 콘솔에 출력
