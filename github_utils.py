@@ -9,6 +9,7 @@ def get_github_repo(repository_name):
     :return: repo object
     """
     # g = Github(access_token)
+    g = Github()
     return g.get_user().get_repo(repository_name)
 
 
