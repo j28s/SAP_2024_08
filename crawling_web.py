@@ -49,7 +49,7 @@ def extract_article_data_nongsaro(soup):
             # 제목, 내용, 날짜 가져오기
             title = news_item.select_one('.contBox strong').get_text(strip=True)
             content = news_item.select_one('.contBox p.txt').get_text(strip=True)[:50] + "..."
-            date = news_item.select_one('.contBox em.date').get_text(strip=True)[0]
+            date = news_item.select_one('.contBox em.date').get_text(strip=True)
 
             if date == today_date:
                 # onclick 속성에서 숫자 추출

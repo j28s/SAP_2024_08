@@ -30,6 +30,8 @@ if __name__ == "__main__":
 
     # 농사로 공지사항 크롤링
     nongsaro_articles = extract_article_data_nongsaro(nongsaro_soup)
+
+
     all_articles = rda_articles + nongsaro_articles
 
 
