@@ -6,7 +6,7 @@ name: RDA News Crawler
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   schedule:
-      - cron: '0 22 * * *'
+      - cron: '0 10 * * *'
   workflow_dispatch: # 수동 실행 옵션
   # Allows you to run this workflow manually from the Actions tab
  
