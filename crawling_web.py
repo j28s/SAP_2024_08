@@ -69,7 +69,32 @@ def extract_article_data_nongsaro(soup):
                     })
     return articles
 
+def extract_article_data_me(soup):
+    base_url = "https://www.me.go.kr/home/web/board/read.do?"
+    articles = []
+    today_date = datetime.now().strftime('%Y-%m-%d')
 
+    rows = soup.select('tbody tr')
+    for row in rows:
+        link_tag = row.select_one('a')
+        if link_tag:
+            # 제목, 날짜 가져오기
+            title = link_tag.get_text(strip=True)
+            date = row.select('td')[-2].get_text(strip=True)
+
+            if date == today_date:
+                # 링크 생성
+                relative_url = link_tag['href']
+                full_url = base_url + relative_url
+
+                # articles 리스트에 추가
+                articles.append({
+                    "title": f"[환경부] {title}",
+                    "date": date,
+                    "content": "내용 없음",
+                    "url": full_url
+                })
+    return articles
 
 
 

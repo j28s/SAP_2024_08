@@ -1,15 +1,13 @@
 import os
 from datetime import datetime
 from pytz import timezone
-from crawling_web import extract_article_data_nongsaro
+from crawling_web import extract_article_data_nongsaro, extract_article_data_me
 from crawling_web import parsing_beautifulsoup, extract_article_data
 from github_utils import get_github_repo, upload_github_issue
 from sms_sender import send_sms
 
 if __name__ == "__main__":
     access_token = os.environ['MY_GITHUB_TOKEN']
-    # access_token = os.environ.get('MY_GITHUB_TOKEN', None)
-    # access_token = os.getenv('GIT_ACTION_KEY')
     if not access_token:
         print("Error: GIT_ACTION_KEY is not set.")
     repository_name = "SAP_2024_08"
@@ -24,15 +22,18 @@ if __name__ == "__main__":
     rda_soup = parsing_beautifulsoup(rda_news_url)
     rda_articles = extract_article_data(rda_soup)
 
-
+    # 농사로 공지사항 크롤링
     nongsaro_url = "https://www.nongsaro.go.kr/portal/ps/psa/psac/farmLocalNewsLst.ps?pageIndex=1&pageSize=1&menuId=PS03939&keyval=&sType=&sSrchType=sSj&sText="
     nongsaro_soup = parsing_beautifulsoup(nongsaro_url)
-
-    # 농사로 공지사항 크롤링
     nongsaro_articles = extract_article_data_nongsaro(nongsaro_soup)
 
+    # 환경부 데이터 수집
+    me_url = "https://www.me.go.kr/home/web/board/read.do?pagerOffset=0&maxPageItems=10&maxIndexPages=10&searchKey=&searchValue=&menuId=10525&orgCd=&boardId=1705390&boardMasterId=1&boardCategoryId=&decorator="
+    me_soup = parsing_beautifulsoup(me_url)
+    me_articles = extract_article_data_me(me_soup)
 
-    all_articles = rda_articles + nongsaro_articles
+    # 모든 기사들을 합치기
+    all_articles = rda_articles + nongsaro_articles + me_articles
 
 
     issue_title = f"{today_date} 보도자료"
