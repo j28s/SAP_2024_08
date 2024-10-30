@@ -67,7 +67,7 @@ def extract_article_data_nongsaro(soup):
                         "content": f"「{content}」",
                         "url": full_url
                     })
-        return articles
+    return articles
 
 
 
