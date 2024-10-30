@@ -39,12 +39,6 @@ if __name__ == "__main__":
         [f"### {article['title']} ({article['date']})\n- URL: {article['url']}\n- 내용: {article['content']}" for article in all_articles]
     )
 
-    # GitHub 업로드 대신 콘솔에 출력
-    print("Issue Title:", issue_title)
-    print("Upload Contents:")
-    print(upload_contents)
-    print("Upload Github Issue Success!")  # 실제로 업로드하지 않고 성공 메시지 출력
-
     # GitHub에 Issue 업로드
     repo = get_github_repo(access_token, repository_name)
     # repo = get_github_repo(repository_name)

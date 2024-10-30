@@ -29,7 +29,7 @@ def extract_article_data(soup):
             full_url = base_url + cleaned_url
 
             articles.append({
-                "title": title,
+                "title": f"[농촌진흥청]{title}",
                 "date": date,
                 "content": f"「{content[:50]}...」",  # 50자만 표시
                 "url": full_url
@@ -59,7 +59,7 @@ def extract_article_data_nongsaro(soup):
 
             # articles 리스트에 추가
             articles.append({
-                "title": title,
+                "title": f"[농사로]{title}",
                 "date": date,
                 "content": f"「{content}」",
                 "url": full_url
