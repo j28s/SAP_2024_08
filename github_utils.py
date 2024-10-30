@@ -1,14 +1,14 @@
 from github import Github
 
 
-def get_github_repo(access_token, repository_name):
+def get_github_repo(repository_name):
     """
     github repo object를 얻는 함수
     :param access_token: Github access token
     :param repository_name: repo 이름
     :return: repo object
     """
-    g = Github(access_token)
+    # g = Github(access_token)
     return g.get_user().get_repo(repository_name)
 
 
