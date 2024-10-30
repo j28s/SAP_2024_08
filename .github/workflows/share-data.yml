@@ -22,7 +22,7 @@ jobs:
 
      - name: Run crawler script to fetch news
        run: |
-          python crawling_rda.py > rda_news.txt
+          python crawling_web.py > rda_news.txt
 
      - name: Upload crawled data
        uses: actions/upload-artifact@v3
