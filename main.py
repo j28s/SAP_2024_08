@@ -33,7 +33,7 @@ if __name__ == "__main__":
     all_articles = rda_articles + nongsaro_articles
 
 
-    issue_title = f"보도자료 알림({today_date})"
+    issue_title = f"{today_date} 보도자료"
     upload_contents = "\n\n".join(
         [f"### {article['title']} ({article['date']})\n- URL: {article['url']}\n- 내용: {article['content']}" for article in all_articles]
     )
@@ -45,5 +45,5 @@ if __name__ == "__main__":
     print("Upload Github Issue Success!")
 
     # SMS로 전송
-    sms_body = f"보도자료 알림({today_date})\n" + "\n".join([f"{article['title']}" for article in all_articles])
-    send_sms(sms_body)
+    # sms_body = f"보도자료 알림({today_date})\n" + "\n".join([f"{article['title']}" for article in all_articles])
+    # send_sms(sms_body)

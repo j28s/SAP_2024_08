@@ -41,29 +41,32 @@ def extract_article_data_nongsaro(soup):
     articles = []
     today_date = datetime.now().strftime('%Y-%m-%d')
 
-    news_items = soup.select('.photo_list li a')
+    news_items = soup.select('.photo_list li')
 
     for news_item in news_items:
-        # 제목, 내용, 날짜 가져오기
-        title = news_item.select_one('.contBox strong').get_text(strip=True)
-        content = news_item.select_one('.contBox p.txt').get_text(strip=True)[:50] + "..."
-        date = news_item.select_one('.contBox em.date').get_text(strip=True)
+        link_tag = news_item.select_one('a')
+        if link_tag:
+            # 제목, 내용, 날짜 가져오기
+            title = news_item.select_one('.contBox strong').get_text(strip=True)
+            content = news_item.select_one('.contBox p.txt').get_text(strip=True)[:50] + "..."
+            date = news_item.select_one('.contBox em.date').get_text(strip=True)
 
-        if date == today_date:
-            # onclick 속성에서 숫자 추출
-            onclick_attr = news_item['onclick']
-            number = onclick_attr.split("'")[1]  # 숫자만 추출
+            if date == today_date:
+                # onclick 속성에서 숫자 추출
+                if 'onclick' in link_tag.attrs:
+                    onclick_attr = link_tag['onclick']
+                    number = onclick_attr.split("'")[1]  # 숫자만 추출
 
-            # base_url에 숫자 삽입하여 full_url 생성
-            full_url = base_url.format(number)
+                    # base_url에 숫자 삽입하여 full_url 생성
+                    full_url = base_url.format(number)
 
-            # articles 리스트에 추가
-            articles.append({
-                "title": f"[농사로] {title}",
-                "date": date,
-                "content": f"「{content}」",
-                "url": full_url
-            })
+                    # articles 리스트에 추가
+                    articles.append({
+                        "title": f"[농사로] {title}",
+                        "date": date,
+                        "content": f"「{content}」",
+                        "url": full_url
+                    })
         return articles
 
 
