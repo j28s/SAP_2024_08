@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from pytz import timezone
-from crawling_rda import parsing_beautifulsoup, extract_book_data
+from crawling_rda import parsing_beautifulsoup, extract_article_data
 from github_utils import get_github_repo, upload_github_issue
 
 if __name__ == "__main__":
