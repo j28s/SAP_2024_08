@@ -5,7 +5,7 @@ from crawling_rda import parsing_beautifulsoup, extract_article_data
 from github_utils import get_github_repo, upload_github_issue
 
 if __name__ == "__main__":
-    # access_token = os.environ['MY_GITHUB_TOKEN']
+    access_token = os.environ['MY_GITHUB_TOKEN']
     # access_token = os.environ.get('MY_GITHUB_TOKEN', None)
     repository_name = "SAP_2024_08"
 
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     )
 
     # GitHub에 Issue 업로드
-    # repo = get_github_repo(access_token, repository_name)
-    repo = get_github_repo(repository_name)
+    repo = get_github_repo(access_token, repository_name)
+    # repo = get_github_repo(repository_name)
     upload_github_issue(repo, issue_title, upload_contents)
     print("Upload Github Issue Success!")
