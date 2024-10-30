@@ -4,48 +4,62 @@ on: [push]
 
 jobs:
   job_1:
-    name: Add 3 and 7
+    name: Crawl latest RDA news
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
-        run: |
-          expr 3 + 7 > math-homework.txt
-      - name: Upload math result for job 1
-        uses: actions/upload-artifact@v1
-        with:
-          name: homework
-          path: math-homework.txt
+     - name: Check out the repository
+       uses: actions/checkout@v3
+
+     - name: Set up Python
+       uses: actions/setup-python@v3
+       with:
+         python-version: '3.8'
+
+     - name: Install dependencies
+       run: |
+         python -m pip install --upgrade pip
+         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+     - name: Run crawler script to fetch news
+       run: |
+          python crawling_rda.py > rda_news.txt
+
+     - name: Upload crawled data
+       uses: actions/upload-artifact@v3
+       with:
+          name: rda_news_data
+          path: rda_news.txt
 
   job_2:
-    name: Multiply by 9
+    name: Process RDA news data
     needs: job_1
     runs-on: windows-latest
     steps:
-      - name: Download math result for job 1
-        uses: actions/download-artifact@v1
+      - name: Download crawled data from job 1
+        uses: actions/download-artifact@v3
         with:
-          name: homework
-      - shell: bash
+          name: rda_news_data
+          
+      - name: Process data
         run: |
-          value=`cat homework/math-homework.txt`
-          expr $value \* 9 > homework/math-homework.txt
-      - name: Upload math result for job 2
-        uses: actions/upload-artifact@v1
-        with:
-          name: homework
-          path: homework/math-homework.txt
+          # 데이터 가공 Python 스크립트를 사용해 필요 형식으로 데이터 변경
+          python process_data.py rda_news.txt > processed_rda_news.txt
 
+      - name: Upload processed data
+        uses: actions/upload-artifact@v3
+        with:
+          name: processed_rda_news
+          path: processed_rda_news.txt
+          
   job_3:
-    name: Display results
+    name: Display final processed data
     needs: job_2
     runs-on: macOS-latest
     steps:
       - name: Download math result for job 2
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
-          name: homework
-      - name: Print the final result
-        shell: bash
+          name: processed_rda_news
+      - name: Print the final news data
         run: |
-          value=`cat homework/math-homework.txt`
-          echo The result is $value
+          cat processed_rda_news.txt
