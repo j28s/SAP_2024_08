@@ -30,7 +30,6 @@ if __name__ == "__main__":
 
     # 농사로 공지사항 크롤링
     nongsaro_articles = extract_article_data_nongsaro(nongsaro_soup)
-
     all_articles = rda_articles + nongsaro_articles
 
 
@@ -46,5 +45,5 @@ if __name__ == "__main__":
     print("Upload Github Issue Success!")
 
     # SMS로 전송
-    sms_body = f"보도자료 알림({today_date})\n" + "\n".join([f"{article['title']} ({article['date']}): {article['url']}" for article in all_articles])
+    sms_body = f"보도자료 알림({today_date})\n" + "\n".join([f"{article['title']}" for article in all_articles])
     send_sms(sms_body)
