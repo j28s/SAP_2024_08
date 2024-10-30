@@ -7,9 +7,9 @@ from github_utils import get_github_repo, upload_github_issue
 if __name__ == "__main__":
     # access_token = os.environ['MY_GITHUB_TOKEN']
     # access_token = os.environ.get('MY_GITHUB_TOKEN', None)
-    access_token = os.getenv('MY_GITHUB_TOKEN')
+    access_token = os.getenv('GIT_ACTION_KEY')
     if not access_token:
-        print("Error: MY_GITHUB_TOKEN is not set.")
+        print("Error: GIT_ACTION_KEY is not set.")
     repository_name = "SAP_2024_08"
 
     seoul_timezone = timezone('Asia/Seoul')
