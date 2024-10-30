@@ -36,3 +36,5 @@ jobs:
           python main.py
         env:
           MY_GITHUB_TOKEN: ${{ secrets.GIT_ACTION_KEY }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
