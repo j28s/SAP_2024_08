@@ -81,7 +81,7 @@ if __name__ == "__main__":
             message_lines.append(f"{source}에서 새로운 소식이 있습니다!")
 
         message = "\n".join(message_lines)
-        send_twilio_sms(message)
+        send_sms(message)
 
     # GitHub에 Issue 업로드
     issue_title = f"{today_date} 보도자료"
