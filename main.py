@@ -6,11 +6,26 @@ from app import parsing_beautifulsoup, extract_article_data
 from github_utils import get_github_repo, upload_github_issue
 from sms_sender import send_sms
 import subprocess
+import json
 
 
 def run_streamlit_app():
     """스트림릿 애플리케이션을 실행합니다."""
     subprocess.Popen(["streamlit", "run", "app.py"])
+
+
+def load_previous_articles(filename='previous_articles.json'):
+    """이전 기사를 로드합니다."""
+    if os.path.exists(filename):
+        with open(filename, 'r') as file:
+            return json.load(file)
+    return []
+
+
+def save_current_articles(articles, filename='previous_articles.json'):
+    """현재 기사를 저장합니다."""
+    with open(filename, 'w') as file:
+        json.dump(articles, file)
 
 
 if __name__ == "__main__":
@@ -43,20 +58,28 @@ if __name__ == "__main__":
     # 모든 기사들을 합치기
     all_articles = rda_articles + nongsaro_articles + me_articles
 
+    # 이전 기사 로드
+    previous_articles = load_previous_articles()
+
+    # 새로운 기사 확인
+    new_articles = [article for article in all_articles if article not in previous_articles]
+
+    if new_articles:
+        send_sms("새로운 기사 알림: 새로운 소식이 있습니다!")
+
+    # GitHub에 Issue 업로드
     issue_title = f"{today_date} 보도자료"
     upload_contents = "\n\n".join(
         [f"### {article['title']} ({article['date']})\n- URL: {article['url']}\n- 내용: {article['content']}" for article
          in all_articles]
     )
 
-    # GitHub에 Issue 업로드
     repo = get_github_repo(access_token, repository_name)
     upload_github_issue(repo, issue_title, upload_contents)
     print("Upload Github Issue Success!")
 
-    # 새로운 기사 확인 및 SMS 전송
-    if all_articles:
-        send_sms("새로운 소식이 있습니다!")
+    # 현재 기사를 저장
+    save_current_articles(all_articles)
 
     # 스트림릿 앱 실행
     run_streamlit_app()
