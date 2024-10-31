@@ -54,9 +54,9 @@ if __name__ == "__main__":
     upload_github_issue(repo, issue_title, upload_contents)
     print("Upload Github Issue Success!")
 
-    # SMS로 전송 (주석 처리)
-    # sms_body = f"보도자료 알림({today_date})\n" + "\n".join([f"{article['title']}" for article in all_articles])
-    # send_sms(sms_body)
+    # 새로운 기사 확인 및 SMS 전송
+    if all_articles:
+        send_sms("새로운 소식이 있습니다!")
 
     # 스트림릿 앱 실행
     run_streamlit_app()
