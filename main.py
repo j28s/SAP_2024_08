@@ -8,10 +8,10 @@ from sms_sender import send_sms
 import subprocess
 import json
 
-
-def run_streamlit_app():
-    """스트림릿 애플리케이션을 실행합니다."""
-    subprocess.Popen(["streamlit", "run", "app.py"])
+#
+# def run_streamlit_app():
+#     """스트림릿 애플리케이션을 실행합니다."""
+#     subprocess.Popen(["streamlit", "run", "app.py"])
 
 
 def load_previous_articles(filename='previous_articles.json'):
@@ -65,7 +65,23 @@ if __name__ == "__main__":
     new_articles = [article for article in all_articles if article not in previous_articles]
 
     if new_articles:
-        send_sms("새로운 기사 알림: 새로운 소식이 있습니다!")
+        # 새로운 소식 출처를 포함한 메시지 생성
+        message_lines = ["새로운 소식이 있습니다!"]
+
+        for article in new_articles:
+            if "[농촌진흥청]" in article['title']:
+                source = "농촌진흥청"
+            elif "[농사로]" in article['title']:
+                source = "농사로"
+            elif "[환경부]" in article['title']:
+                source = "환경부"
+            else:
+                source = "알 수 없는 출처"
+
+            message_lines.append(f"{source}에서 새로운 소식이 있습니다!")
+
+        message = "\n".join(message_lines)
+        send_twilio_sms(message)
 
     # GitHub에 Issue 업로드
     issue_title = f"{today_date} 보도자료"
@@ -81,5 +97,5 @@ if __name__ == "__main__":
     # 현재 기사를 저장
     save_current_articles(all_articles)
 
-    # 스트림릿 앱 실행
-    run_streamlit_app()
+    # # 스트림릿 앱 실행
+    # run_streamlit_app()
