@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     if new_articles:
         # 새로운 소식 출처를 포함한 메시지 생성
-        message_lines = ["새로운 소식이 있습니다!"]
+        message_lines = []
 
         for article in new_articles:
             if "[농촌진흥청]" in article['title']:
