@@ -8,26 +8,6 @@ from sms_sender import send_sms
 import json
 
 
-def send_twilio_sms(message):
-    """Twilio를 사용하여 SMS를 전송합니다."""
-    account_sid = os.environ['TWILIO_ACCOUNT_SID']
-    auth_token = os.environ['TWILIO_AUTH_TOKEN']
-    twilio_number = os.environ['TWILIO_PHONE_NUMBER']
-    to_number = os.environ['TO_PHONE_NUMBER']  # 수신자 번호
-
-    client = Client(account_sid, auth_token)
-    client.messages.create(
-        body=message,
-        from_=twilio_number,
-        to=to_number
-    )
-
-
-def run_streamlit_app():
-    """스트림릿 애플리케이션을 실행합니다."""
-    subprocess.Popen(["streamlit", "run", "app.py"])
-
-
 def load_previous_articles(filename='previous_articles.json'):
     """이전 기사를 로드합니다."""
     if os.path.exists(filename):
@@ -92,7 +72,7 @@ if __name__ == "__main__":
 
         if sources:
             message = ", ".join(sources) + "에서 새로운 소식이 있습니다!"
-            send_twilio_sms(message)
+            send_sms(message)
 
     # GitHub에 Issue 업로드
     issue_title = f"{today_date} 보도자료"
